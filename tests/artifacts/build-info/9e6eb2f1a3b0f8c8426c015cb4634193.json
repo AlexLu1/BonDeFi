@@ -1,0 +1,72 @@
+{
+	"id": "9e6eb2f1a3b0f8c8426c015cb4634193",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.26",
+	"solcLongVersion": "0.8.26+commit.8a97fa7a",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"tests/MyToken_test.sol": {
+				"content": "// SPDX-License-Identifier: GPL-3.0\n/*\npragma solidity >=0.7.0 <0.9.0;\nimport \"remix_tests.sol\";\nimport \"../contracts/BonDeFiToken.sol\";\n\ncontract MyTokenTest is BonDeFiToken {\n\n    function testTokenInitialValues() public {\n        Assert.equal(name(), \"MyToken\", \"token name did not match\");\n        Assert.equal(symbol(), \"MTK\", \"token symbol did not match\");\n        Assert.equal(decimals(), 18, \"token decimals did not match\");\n        Assert.equal(totalSupply(), 0, \"token supply should be zero\");\n    }\n}*/"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"output": {
+		"errors": [
+			{
+				"component": "general",
+				"errorCode": "3420",
+				"formattedMessage": "Warning: Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"\n--> tests/MyToken_test.sol\n\n",
+				"message": "Source file does not specify required compiler version! Consider adding \"pragma solidity ^0.8.26;\"",
+				"severity": "warning",
+				"sourceLocation": {
+					"end": -1,
+					"file": "tests/MyToken_test.sol",
+					"start": -1
+				},
+				"type": "Warning"
+			}
+		],
+		"sources": {
+			"tests/MyToken_test.sol": {
+				"ast": {
+					"absolutePath": "tests/MyToken_test.sol",
+					"exportedSymbols": {},
+					"id": 1,
+					"license": "GPL-3.0",
+					"nodeType": "SourceUnit",
+					"nodes": [],
+					"src": "513:0:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

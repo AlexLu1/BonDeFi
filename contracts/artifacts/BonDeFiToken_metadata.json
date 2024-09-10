@@ -34,17 +34,7 @@
 					},
 					{
 						"internalType": "uint256",
-						"name": "totalInterest",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "interestFrequency",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "maturityDate",
+						"name": "_maturityDate",
 						"type": "uint256"
 					},
 					{
@@ -619,6 +609,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "maturityDate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "name",
 				"outputs": [
 					{
@@ -983,7 +986,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/BonDeFi Token.sol": "BonDeFiTokenSiemens"
+			"contracts/BonDeFiToken.sol": "BonDeFiToken"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -1093,12 +1096,12 @@
 				"dweb:/ipfs/QmeJQCtZrQjtJLr6u7ZHWeH3pBnjtLWzvRrKViAi7UZqxL"
 			]
 		},
-		"contracts/BonDeFi Token.sol": {
-			"keccak256": "0x82ace977cd220ae16f1d6af65ae586113e082ce71c1fdfb89bfb2391f4bc13b3",
+		"contracts/BonDeFiToken.sol": {
+			"keccak256": "0xec87b440976d58f1fb50422aa8e2e75830e5bbdfe8222968c200c3cb07007fb0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://49e8db55b83ac0beb84c910b05563508ca8e144bcdf4b836bcbbdbc28da5b670",
-				"dweb:/ipfs/QmYeH9GihjyRL4yVE52TTvz6hay4CkTzyyKe9pLd2i34EY"
+				"bzz-raw://23414bb25cf4a919210576a214778d6ec15999204b22135bb700bf308386eb9b",
+				"dweb:/ipfs/QmPmxzcSDCHb59M6Yr7st2am3GxjJQ9CuAQ2VyDvXxAP2E"
 			]
 		}
 	},

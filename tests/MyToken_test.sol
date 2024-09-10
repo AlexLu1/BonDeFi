@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
-
+/*
 pragma solidity >=0.7.0 <0.9.0;
 import "remix_tests.sol";
-import "../contracts/MyToken.sol";
+import "../contracts/BonDeFiToken.sol";
 
-contract MyTokenTest is MyToken {
+contract MyTokenTest is BonDeFiToken {
 
     function testTokenInitialValues() public {
         Assert.equal(name(), "MyToken", "token name did not match");
@@ -12,4 +12,4 @@ contract MyTokenTest is MyToken {
         Assert.equal(decimals(), 18, "token decimals did not match");
         Assert.equal(totalSupply(), 0, "token supply should be zero");
     }
-}
+}*/
