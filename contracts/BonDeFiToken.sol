@@ -6,48 +6,65 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "contracts/BonDeFiInterestToken.sol";
 
-contract BonDeFiToken is ERC20, ERC20Burnable, ERC20Pausable, AccessControl {
+
+contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant BOND_ISSUER = keccak256("BOND_ISSUER");
     address public immutable stableCoin;
     uint256 public immutable maturityDate;
-    address public interestToken;
+    address public immutable interestToken;
+    uint256 public investorFundsAmount;
 
     constructor(address administrator, address bondIssuer, address _stableCoin,
-    uint256 _faceValue, uint256 _maturityDate)
+    uint256 _faceValue, uint256 _maturityDate, uint256 _totalInterest)
         ERC20("BonDeFiToken", "BDF")
     {
         _grantRole(ADMIN, administrator);
         _grantRole(BOND_ISSUER, bondIssuer);
         stableCoin = _stableCoin;
         maturityDate = _maturityDate;
-        _mint(msg.sender, _faceValue * 10 ** decimals());
+        investorFundsAmount = 0;
+        _mint(address(this), _faceValue);
+        //Create interest token
+        BonDeFiInterestToken newInterestToken = new BonDeFiInterestToken(address(this),_totalInterest,"BonDeFiTokenInterest","BDFI");
+        interestToken = address(newInterestToken);
     }
-    function setInterestToken(address interestTokenAddr) public {
-        interestToken = interestTokenAddr;
-    }
-
     function buyBond(uint256 amountTokens) public{
+        investorFundsAmount += amountTokens;
+        require(ERC20(this).balanceOf(address(this)) - amountTokens >= 0);
         require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens),"Stable coin transfer failed");
         require(ERC20(this).transfer(msg.sender,amountTokens),"Bond token transfer failed");
     }
 
+    function depositPayment(uint256 amountTokens) public{
+        require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens),"Stable coin deposit failed.");
+    }
+
     function distributeInterest(address tokenHolder,uint256 amount) public onlyRole(ADMIN){
-        require(IERC20(interestToken).transferFrom(interestToken,tokenHolder,amount),"Transfer failed");
+        require(IERC20(interestToken).transfer(tokenHolder,amount),"Transfer failed");
     }
 
     function distributeInterestAll(address[] memory tokenHolders, uint256[] memory amounts) public onlyRole(ADMIN) {
         require(tokenHolders.length == amounts.length, "Token holders and amounts length mismatch");
         for (uint256 i = 0; i < tokenHolders.length; i++) {
-            require(IERC20(interestToken).transferFrom(msg.sender, tokenHolders[i], amounts[i]), "Transfer failed");
+            require(IERC20(interestToken).transfer(tokenHolders[i], amounts[i]), "Transfer failed");
         }
     }
-
+    
     function claimInvestorFunds() public onlyRole(BOND_ISSUER){
-        uint256 amountInvestorCoins = IERC20(stableCoin).balanceOf(address(this));
-        require(amountInvestorCoins > 0,"No investor funds available.");
-        require(ERC20(this).transfer(msg.sender,amountInvestorCoins),"Failed to transfer stable coins");
+        require(investorFundsAmount > 0,"No investor funds available.");
+        require(IERC20(stableCoin).transfer(msg.sender,investorFundsAmount),"Failed to transfer stable coins");
+    }
+
+    function claimInterest(uint256 amountTokens) public{
+        //execute transfer
+        require(amountTokens > 0,"Can't claim zero coins");
+        require(IERC20(interestToken).transferFrom(msg.sender,address(this),amountTokens),"Interest token transfer failed");
+        require(IERC20(stableCoin).transfer(msg.sender,amountTokens),"Stable coin transfer failed");
+        //burn coins
+        ERC20Burnable(interestToken).burn(amountTokens);
     }
 
     function claimFaceValue(uint256 amountTokens) public{
@@ -62,7 +79,7 @@ contract BonDeFiToken is ERC20, ERC20Burnable, ERC20Pausable, AccessControl {
     }
     //for demonstration only
     function showBondTokens() public view returns (uint256) {
-        return ERC20(this).balanceOf(address(this));
+        return ERC20(this).balanceOf(msg.sender);
     }
     function showInterestTokens() public view returns (uint256){
         return IERC20(interestToken).balanceOf(msg.sender);

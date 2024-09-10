@@ -31,6 +31,11 @@
 						"internalType": "uint256",
 						"name": "_maturityDate",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_totalInterest",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -414,37 +419,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "value",
-						"type": "uint256"
-					}
-				],
-				"name": "burn",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "account",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "value",
-						"type": "uint256"
-					}
-				],
-				"name": "burnFrom",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "amountTokens",
 						"type": "uint256"
 					}
@@ -468,6 +442,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountTokens",
+						"type": "uint256"
+					}
+				],
+				"name": "claimInterest",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "claimInvestorFunds",
 				"outputs": [],
@@ -485,6 +472,19 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amountTokens",
+						"type": "uint256"
+					}
+				],
+				"name": "depositPayment",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -599,6 +599,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "investorFundsAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "maturityDate",
 				"outputs": [
 					{
@@ -675,19 +688,6 @@
 					}
 				],
 				"name": "revokeRole",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "interestTokenAddr",
-						"type": "address"
-					}
-				],
-				"name": "setInterestToken",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -959,12 +959,6 @@
 				"balanceOf(address)": {
 					"details": "See {IERC20-balanceOf}."
 				},
-				"burn(uint256)": {
-					"details": "Destroys a `value` amount of tokens from the caller. See {ERC20-_burn}."
-				},
-				"burnFrom(address,uint256)": {
-					"details": "Destroys a `value` amount of tokens from `account`, deducting from the caller's allowance. See {ERC20-_burn} and {ERC20-allowance}. Requirements: - the caller must have allowance for ``accounts``'s tokens of at least `value`."
-				},
 				"decimals()": {
 					"details": "Returns the number of decimals used to get its user representation. For example, if `decimals` equals `2`, a balance of `505` tokens should be displayed to a user as `5.05` (`505 / 10 ** 2`). Tokens usually opt for a value of 18, imitating the relationship between Ether and Wei. This is the default value returned by this function, unless it's overridden. NOTE: This information is only used for _display_ purposes: it in no way affects any of the arithmetic of the contract, including {IERC20-balanceOf} and {IERC20-transfer}."
 				},
@@ -1125,12 +1119,20 @@
 				"dweb:/ipfs/QmeJQCtZrQjtJLr6u7ZHWeH3pBnjtLWzvRrKViAi7UZqxL"
 			]
 		},
-		"contracts/BonDeFiToken.sol": {
-			"keccak256": "0xb01ee414211203741cc58fbdf2a9eb96c79a6b3399ec6c61ff3515838c12cd2f",
+		"contracts/BonDeFiInterestToken.sol": {
+			"keccak256": "0xaca63bf380c643f5cb879f2816405dc1a72fbe9e544def959ec585b2ac6dec17",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2f188d300c1c590ffe07c25f5e388786cea7205112b6ddcfc9d9720a09e3ef0c",
-				"dweb:/ipfs/QmfHAkGvTLsXMRfWHMXYQ8xAsosvuj1bJN4n4kxcY2BomS"
+				"bzz-raw://7a0d99ce881fc19dc0d113317bd4ee26e8f8e238390354b2d501330bc4134d1f",
+				"dweb:/ipfs/QmeY5ExHh4gnVQw8jV2nRAGjDQCFuwVJt1nc66ehkrt4fp"
+			]
+		},
+		"contracts/BonDeFiToken.sol": {
+			"keccak256": "0x4f6f0379559590c01477b8822b5b47801473a4ad1a06b58a84dbc2a8154b8a45",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d9b3ed48df184c30ba9745e2c366eac85ff973b9c9c8f7bc164a72fdd91e5edd",
+				"dweb:/ipfs/QmWnFTwXVj9kz8NWg2BBaMvjmrFGTULACTS8wxNMoj51rz"
 			]
 		}
 	},
