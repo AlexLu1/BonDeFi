@@ -23,23 +23,13 @@
 						"type": "address"
 					},
 					{
-						"internalType": "address",
-						"name": "_interestCoin",
-						"type": "address"
-					},
-					{
 						"internalType": "uint256",
-						"name": "faceValue",
+						"name": "_faceValue",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
 						"name": "_maturityDate",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "_unitSize",
 						"type": "uint256"
 					}
 				],
@@ -596,7 +586,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "interestCoin",
+				"name": "interestToken",
 				"outputs": [
 					{
 						"internalType": "address",
@@ -687,6 +677,58 @@
 				"name": "revokeRole",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "interestTokenAddr",
+						"type": "address"
+					}
+				],
+				"name": "setInterestToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "showBondTokens",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "showInterestTokens",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "showStableCoins",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -798,19 +840,6 @@
 					}
 				],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "unitSize",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -1097,11 +1126,11 @@
 			]
 		},
 		"contracts/BonDeFiToken.sol": {
-			"keccak256": "0xec87b440976d58f1fb50422aa8e2e75830e5bbdfe8222968c200c3cb07007fb0",
+			"keccak256": "0xb01ee414211203741cc58fbdf2a9eb96c79a6b3399ec6c61ff3515838c12cd2f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://23414bb25cf4a919210576a214778d6ec15999204b22135bb700bf308386eb9b",
-				"dweb:/ipfs/QmPmxzcSDCHb59M6Yr7st2am3GxjJQ9CuAQ2VyDvXxAP2E"
+				"bzz-raw://2f188d300c1c590ffe07c25f5e388786cea7205112b6ddcfc9d9720a09e3ef0c",
+				"dweb:/ipfs/QmfHAkGvTLsXMRfWHMXYQ8xAsosvuj1bJN4n4kxcY2BomS"
 			]
 		}
 	},

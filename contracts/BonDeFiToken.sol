@@ -11,35 +11,36 @@ contract BonDeFiToken is ERC20, ERC20Burnable, ERC20Pausable, AccessControl {
     bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant BOND_ISSUER = keccak256("BOND_ISSUER");
     address public immutable stableCoin;
-    address public immutable interestCoin;
-    uint256 public immutable unitSize;
     uint256 public immutable maturityDate;
-    constructor(address administrator, address bondIssuer, address _stableCoin,address _interestCoin,
-    uint256 faceValue, uint256 _maturityDate, uint256 _unitSize) 
+    address public interestToken;
+
+    constructor(address administrator, address bondIssuer, address _stableCoin,
+    uint256 _faceValue, uint256 _maturityDate)
         ERC20("BonDeFiToken", "BDF")
     {
         _grantRole(ADMIN, administrator);
         _grantRole(BOND_ISSUER, bondIssuer);
         stableCoin = _stableCoin;
-        interestCoin = _interestCoin;
-        unitSize = _unitSize;
         maturityDate = _maturityDate;
-        _mint(msg.sender, (faceValue / _unitSize) * 10 ** decimals());
+        _mint(msg.sender, _faceValue * 10 ** decimals());
+    }
+    function setInterestToken(address interestTokenAddr) public {
+        interestToken = interestTokenAddr;
     }
 
     function buyBond(uint256 amountTokens) public{
-        require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens*unitSize),"Stable coin transfer failed");
+        require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens),"Stable coin transfer failed");
         require(ERC20(this).transfer(msg.sender,amountTokens),"Bond token transfer failed");
     }
 
     function distributeInterest(address tokenHolder,uint256 amount) public onlyRole(ADMIN){
-        require(IERC20(interestCoin).transferFrom(interestCoin,tokenHolder,amount),"Transfer failed");
+        require(IERC20(interestToken).transferFrom(interestToken,tokenHolder,amount),"Transfer failed");
     }
 
     function distributeInterestAll(address[] memory tokenHolders, uint256[] memory amounts) public onlyRole(ADMIN) {
         require(tokenHolders.length == amounts.length, "Token holders and amounts length mismatch");
         for (uint256 i = 0; i < tokenHolders.length; i++) {
-            require(IERC20(interestCoin).transferFrom(msg.sender, tokenHolders[i], amounts[i]), "Transfer failed");
+            require(IERC20(interestToken).transferFrom(msg.sender, tokenHolders[i], amounts[i]), "Transfer failed");
         }
     }
 
@@ -55,9 +56,19 @@ contract BonDeFiToken is ERC20, ERC20Burnable, ERC20Pausable, AccessControl {
         //execute transfer
         require(amountTokens > 0,"Can't claim zero coins");
         require(ERC20(this).transferFrom(msg.sender,address(this),amountTokens),"Bond token transfer failed");
-        require(IERC20(stableCoin).transfer(msg.sender,amountTokens*unitSize),"Stable coin transfer failed");
+        require(IERC20(stableCoin).transfer(msg.sender,amountTokens),"Stable coin transfer failed");
         //burn coins
         _burn(address(this),amountTokens);
+    }
+    //for demonstration only
+    function showBondTokens() public view returns (uint256) {
+        return ERC20(this).balanceOf(address(this));
+    }
+    function showInterestTokens() public view returns (uint256){
+        return IERC20(interestToken).balanceOf(msg.sender);
+    }
+    function showStableCoins() public view returns (uint256){
+        return IERC20(stableCoin).balanceOf(msg.sender);
     }
 
     // The following functions are overrides required by Solidity.
