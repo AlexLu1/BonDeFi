@@ -10,6 +10,7 @@ import "contracts/BonDeFiInterestToken.sol";
 
 
 contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
+    
     bytes32 public constant ADMIN = keccak256("ADMIN");
     bytes32 public constant BOND_ISSUER = keccak256("BOND_ISSUER");
     address public immutable stableCoin;

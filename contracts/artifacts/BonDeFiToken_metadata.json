@@ -599,19 +599,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "investorFundsAmount",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "maturityDate",
 				"outputs": [
 					{
@@ -1128,11 +1115,11 @@
 			]
 		},
 		"contracts/BonDeFiToken.sol": {
-			"keccak256": "0x4f6f0379559590c01477b8822b5b47801473a4ad1a06b58a84dbc2a8154b8a45",
+			"keccak256": "0x26b6058c618a6f2b32ba362eaf517da43c1d8d1173b212932779d82e171c6191",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d9b3ed48df184c30ba9745e2c366eac85ff973b9c9c8f7bc164a72fdd91e5edd",
-				"dweb:/ipfs/QmWnFTwXVj9kz8NWg2BBaMvjmrFGTULACTS8wxNMoj51rz"
+				"bzz-raw://47240c27aa17863b51b37ce39a4ecc09b79f569592daa8d2231bd1ea99462b32",
+				"dweb:/ipfs/QmNoc82ms49K2tY2RTzDtJgVHrX8pDuL8ZN98LX23FRc6r"
 			]
 		}
 	},
