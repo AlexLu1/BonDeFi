@@ -15,7 +15,7 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     address public immutable stableCoin;
     uint256 public immutable maturityDate;
     address public immutable interestToken;
-    uint256 public investorFundsAmount;
+    uint256 internal investorFundsAmount;
 
     constructor(address administrator, address bondIssuer, address _stableCoin,
     uint256 _faceValue, uint256 _maturityDate, uint256 _totalInterest)
