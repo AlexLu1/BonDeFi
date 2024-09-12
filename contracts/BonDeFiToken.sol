@@ -37,7 +37,11 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
         interestFrequency = _interestFrequency;
         interestPaymentsLeft = _interestFrequency;
         investorFundsAmount = 0;
+        //Create own balance
+        balances[address(this)] += _faceValue;
+        isHolder[address(this)] = true;
         _mint(address(this), _faceValue);
+        currentHolders.push(address(this));
         //Create interest token
         BonDeFiInterestToken newInterestToken = new BonDeFiInterestToken(address(this),_totalInterest,"BonDeFiTokenInterest","BDFI");
         interestToken = address(newInterestToken);
@@ -53,7 +57,8 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     function depositPayment(uint256 amountTokens) public{
         require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens),"Stable coin deposit failed.");
     }
-    function distributeInterest() public onlyRole(ADMIN) onlyRole(BOND_ISSUER){
+    function distributeInterest() public {
+        require(hasRole(ADMIN, msg.sender) || hasRole(BOND_ISSUER, msg.sender), "Access Denied: Requires ADMIN or BOND_ISSUER role");
         require(interestPaymentsLeft>0, "All interest payments already done.");
         interestPaymentsLeft -= 1;
         //distribute interest token instead of stable coin if there isnt enough deposit
@@ -78,6 +83,7 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
  
     function claimInvestorFunds() public onlyRole(BOND_ISSUER){
         require(investorFundsAmount > 0,"No investor funds available.");
+        investorFundsAmount = 0;
         require(IERC20(stableCoin).transfer(msg.sender,investorFundsAmount),"Failed to transfer stable coins");
     }
 
@@ -112,21 +118,22 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     }
     //overrides for internal tracking logic
     function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
-        balances[msg.sender] -= amount;
-        balances[recipient] += amount;
+        _updateHolders(address(this),recipient,amount);
         require(super.transfer(recipient, amount), "Transfer failed.");
         return true;
     }
 
     function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
-        balances[msg.sender] -= amount;
-        balances[recipient] += amount;
+        _updateHolders(sender,recipient,amount);
         require(super.transferFrom(sender, recipient, amount), "Transfer failed.");
         return true;
     }
 
-    //updates helper variables for internal tracking
-    function _updateHolders(address sender, address recipient) private {
+    //internal tracking function
+    function _updateHolders(address sender, address recipient,uint256 amount) private {
+        //update sender and recipient balance
+        balances[sender] -= amount;
+        balances[recipient] += amount;
         //check if sender still has tokens
         if(balances[sender] <= 0){
             isHolder[sender] = false;

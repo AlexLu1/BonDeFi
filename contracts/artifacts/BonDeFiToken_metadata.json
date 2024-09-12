@@ -575,6 +575,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "interestPaymentsLeft",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "interestToken",
 				"outputs": [
 					{
@@ -1111,11 +1124,11 @@
 			]
 		},
 		"contracts/BonDeFiToken.sol": {
-			"keccak256": "0xce566cef7c624370f26ff74f441bb4e911bb23f1923358047b97374a444f8c08",
+			"keccak256": "0x6ac4a6ca7e6d1ea29f51277fefcc496ef3961148e93489c6ed76a7a015a22205",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://bff7576e78640f8e31451e8faa314677d469c67d3086bdadbe6b5d2831027203",
-				"dweb:/ipfs/QmXN5r8v1ZUHTACABXJKHdGgddjCxLPT2L215sHMKBYEnD"
+				"bzz-raw://9446c6da5b95c7988f8cf7ab099fccb5cdd1c5835cc5cb6e8659be5d3e30d285",
+				"dweb:/ipfs/QmatAYLmu6erpEEBMBUWWVmLAuzAdaJA57Ab3gxHmAwMq8"
 			]
 		}
 	},
