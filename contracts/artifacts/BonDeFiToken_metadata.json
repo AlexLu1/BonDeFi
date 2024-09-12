@@ -36,6 +36,11 @@
 						"internalType": "uint256",
 						"name": "_totalInterest",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_interestFrequency",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -488,37 +493,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenHolder",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
+				"inputs": [],
 				"name": "distributeInterest",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address[]",
-						"name": "tokenHolders",
-						"type": "address[]"
-					},
-					{
-						"internalType": "uint256[]",
-						"name": "amounts",
-						"type": "uint256[]"
-					}
-				],
-				"name": "distributeInterestAll",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -579,6 +555,19 @@
 						"internalType": "bool",
 						"name": "",
 						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "interestFrequency",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -765,6 +754,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "totalInterest",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "totalSupply",
 				"outputs": [
 					{
@@ -780,12 +782,12 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "to",
+						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "value",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -804,17 +806,17 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "from",
+						"name": "sender",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "to",
+						"name": "recipient",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "value",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -978,12 +980,6 @@
 				},
 				"totalSupply()": {
 					"details": "See {IERC20-totalSupply}."
-				},
-				"transfer(address,uint256)": {
-					"details": "See {IERC20-transfer}. Requirements: - `to` cannot be the zero address. - the caller must have a balance of at least `value`."
-				},
-				"transferFrom(address,address,uint256)": {
-					"details": "See {IERC20-transferFrom}. Emits an {Approval} event indicating the updated allowance. This is not required by the EIP. See the note at the beginning of {ERC20}. NOTE: Does not update the allowance if the current allowance is the maximum `uint256`. Requirements: - `from` and `to` cannot be the zero address. - `from` must have a balance of at least `value`. - the caller must have allowance for ``from``'s tokens of at least `value`."
 				}
 			},
 			"version": 1
@@ -1115,11 +1111,11 @@
 			]
 		},
 		"contracts/BonDeFiToken.sol": {
-			"keccak256": "0x26b6058c618a6f2b32ba362eaf517da43c1d8d1173b212932779d82e171c6191",
+			"keccak256": "0xce566cef7c624370f26ff74f441bb4e911bb23f1923358047b97374a444f8c08",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://47240c27aa17863b51b37ce39a4ecc09b79f569592daa8d2231bd1ea99462b32",
-				"dweb:/ipfs/QmNoc82ms49K2tY2RTzDtJgVHrX8pDuL8ZN98LX23FRc6r"
+				"bzz-raw://bff7576e78640f8e31451e8faa314677d469c67d3086bdadbe6b5d2831027203",
+				"dweb:/ipfs/QmXN5r8v1ZUHTACABXJKHdGgddjCxLPT2L215sHMKBYEnD"
 			]
 		}
 	},

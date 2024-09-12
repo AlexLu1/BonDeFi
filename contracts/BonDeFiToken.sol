@@ -15,23 +15,34 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     bytes32 public constant BOND_ISSUER = keccak256("BOND_ISSUER");
     address public immutable stableCoin;
     uint256 public immutable maturityDate;
+    uint256 public immutable totalInterest;
+    uint256 public immutable interestFrequency;
     address public immutable interestToken;
     uint256 internal investorFundsAmount;
+    uint256 public interestPaymentsLeft;
+    //logic for keeping track of holders internally
+    mapping(address => uint256) private balances;
+    address[] private currentHolders;
+    mapping(address => bool) private isHolder;
 
     constructor(address administrator, address bondIssuer, address _stableCoin,
-    uint256 _faceValue, uint256 _maturityDate, uint256 _totalInterest)
+    uint256 _faceValue, uint256 _maturityDate, uint256 _totalInterest, uint256 _interestFrequency)
         ERC20("BonDeFiToken", "BDF")
     {
         _grantRole(ADMIN, administrator);
         _grantRole(BOND_ISSUER, bondIssuer);
         stableCoin = _stableCoin;
         maturityDate = _maturityDate;
+        totalInterest = _totalInterest;
+        interestFrequency = _interestFrequency;
+        interestPaymentsLeft = _interestFrequency;
         investorFundsAmount = 0;
         _mint(address(this), _faceValue);
         //Create interest token
         BonDeFiInterestToken newInterestToken = new BonDeFiInterestToken(address(this),_totalInterest,"BonDeFiTokenInterest","BDFI");
         interestToken = address(newInterestToken);
     }
+
     function buyBond(uint256 amountTokens) public{
         investorFundsAmount += amountTokens;
         require(ERC20(this).balanceOf(address(this)) - amountTokens >= 0);
@@ -42,18 +53,29 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     function depositPayment(uint256 amountTokens) public{
         require(IERC20(stableCoin).transferFrom(msg.sender,address(this),amountTokens),"Stable coin deposit failed.");
     }
-
-    function distributeInterest(address tokenHolder,uint256 amount) public onlyRole(ADMIN){
-        require(IERC20(interestToken).transfer(tokenHolder,amount),"Transfer failed");
-    }
-
-    function distributeInterestAll(address[] memory tokenHolders, uint256[] memory amounts) public onlyRole(ADMIN) {
-        require(tokenHolders.length == amounts.length, "Token holders and amounts length mismatch");
-        for (uint256 i = 0; i < tokenHolders.length; i++) {
-            require(IERC20(interestToken).transfer(tokenHolders[i], amounts[i]), "Transfer failed");
+    function distributeInterest() public onlyRole(ADMIN) onlyRole(BOND_ISSUER){
+        require(interestPaymentsLeft>0, "All interest payments already done.");
+        interestPaymentsLeft -= 1;
+        //distribute interest token instead of stable coin if there isnt enough deposit
+        if(balanceOf(address(this)) < totalInterest/interestFrequency){
+            require(_distribution(interestToken),"Distribution of interest coin failed.");
+            return;
         }
+        require(_distribution(stableCoin),"Distribution of stable coin failed.");
     }
     
+    //distribute the specified token to every current token holder
+    function _distribution(address erc20token) private returns (bool){
+        for (uint256 i = 0; i < currentHolders.length; i++) {
+            address holder = currentHolders[i];
+            uint256 amountInterest = balances[holder] * (totalInterest/interestFrequency);
+            if(!IERC20(erc20token).transfer(holder,amountInterest)){
+                return false;
+            }
+        }
+        return true;
+    }
+ 
     function claimInvestorFunds() public onlyRole(BOND_ISSUER){
         require(investorFundsAmount > 0,"No investor funds available.");
         require(IERC20(stableCoin).transfer(msg.sender,investorFundsAmount),"Failed to transfer stable coins");
@@ -87,6 +109,46 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     }
     function showStableCoins() public view returns (uint256){
         return IERC20(stableCoin).balanceOf(msg.sender);
+    }
+    //overrides for internal tracking logic
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        balances[msg.sender] -= amount;
+        balances[recipient] += amount;
+        require(super.transfer(recipient, amount), "Transfer failed.");
+        return true;
+    }
+
+    function transferFrom(address sender, address recipient, uint256 amount) public virtual override returns (bool) {
+        balances[msg.sender] -= amount;
+        balances[recipient] += amount;
+        require(super.transferFrom(sender, recipient, amount), "Transfer failed.");
+        return true;
+    }
+
+    //updates helper variables for internal tracking
+    function _updateHolders(address sender, address recipient) private {
+        //check if sender still has tokens
+        if(balances[sender] <= 0){
+            isHolder[sender] = false;
+            _removeHolder(sender);
+        }
+        //check if recipient is already tracked
+        if(!isHolder[recipient]){
+            isHolder[recipient] = true;
+            currentHolders.push(recipient);
+        }
+    }
+
+    //remove holder from holder list
+    function _removeHolder(address holder) private{
+        //swap with last element and remove last element
+        for (uint256 i = 0; i < currentHolders.length; i++) {
+            if (currentHolders[i] == holder) {
+                currentHolders[i] = currentHolders[currentHolders.length - 1];
+                currentHolders.pop();
+                break;
+            }
+        }
     }
 
     // The following functions are overrides required by Solidity.
