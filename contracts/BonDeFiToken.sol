@@ -15,6 +15,7 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     bytes32 public constant BOND_ISSUER = keccak256("BOND_ISSUER");
     address public immutable stableCoin;
     uint256 public immutable maturityDate;
+    uint256 public immutable faceValue;
     uint256 public immutable totalInterest;
     uint256 public immutable interestFrequency;
     address public immutable interestToken;
@@ -33,6 +34,7 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
         _grantRole(BOND_ISSUER, bondIssuer);
         stableCoin = _stableCoin;
         maturityDate = _maturityDate;
+        faceValue = _faceValue;
         totalInterest = _totalInterest;
         interestFrequency = _interestFrequency;
         interestPaymentsLeft = _interestFrequency;
@@ -73,7 +75,7 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
     function _distribution(address erc20token) private returns (bool){
         for (uint256 i = 0; i < currentHolders.length; i++) {
             address holder = currentHolders[i];
-            uint256 amountInterest = balances[holder] * (totalInterest/interestFrequency);
+            uint256 amountInterest = (balances[holder] * totalInterest)/(faceValue*interestFrequency);
             if(!IERC20(erc20token).transfer(holder,amountInterest)){
                 return false;
             }
@@ -83,8 +85,8 @@ contract BonDeFiToken is ERC20, ERC20Pausable, AccessControl {
  
     function claimInvestorFunds() public onlyRole(BOND_ISSUER){
         require(investorFundsAmount > 0,"No investor funds available.");
-        investorFundsAmount = 0;
         require(IERC20(stableCoin).transfer(msg.sender,investorFundsAmount),"Failed to transfer stable coins");
+        investorFundsAmount = 0;
     }
 
     function claimInterest(uint256 amountTokens) public{
